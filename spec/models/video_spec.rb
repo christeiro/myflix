@@ -13,21 +13,13 @@ describe Video do
     expect(video.category).to eq(category)
   end
 
-  it "title is required" do
-    video = Video.new(description: "Spiderman cartoon from 2000")
-    video.valid?
-    expect(video.errors[:title].size).to eq(1)
+  it "does not save without title" do
+    video = Video.create(description: "Spiderman cartoon from 2000")
+    expect(Video.count).to eq(0)
   end
 
-  it "description is required" do
-    video = Video.new(title: "Spiderman")
-    video.valid?
-    expect(video.errors[:description].size).to eq(1)
-  end
-
-  it "title and description is required" do
-    video = Video.new()
-    video.valid?
-    expect(video.errors.messages).to include(:title, :description)
+  it "does not save without description" do
+    video = Video.create(title: "Spiderman")
+    expect(Video.count).to eq(0)
   end
 end
