@@ -8,7 +8,7 @@
 
 category = Category.create!(name: "Cartoons")
 
-Video.create!(description: "Description of the Southpark video", small_cover_url: "/tmp/south_park.jpg",large_cover_url: "/tmp/south_park.jpg", category: category)
+Video.create!(title: "Southpark", description: "Description of the Southpark video", small_cover_url: "/tmp/south_park.jpg",large_cover_url: "/tmp/south_park.jpg", category: category)
 Video.create!(title: "Futurama", description: "Description of the Futurama video", small_cover_url: "/tmp/futurama.jpg",large_cover_url: "/tmp/futurama.jpg", category: category)
 
 
