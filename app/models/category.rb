@@ -1,7 +1,7 @@
 class Category < ActiveRecord::Base
-  has_many :videos, -> { order("title") }
+  has_many :videos, -> { order("created_at desc") }
 
   def recent_videos
-    videos.reorder("created_at DESC").limit(6)
+    videos.first(6)
   end
 end
