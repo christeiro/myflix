@@ -19,3 +19,5 @@ Video.create!(title: "Frozen", description: "Description of the Frozen movie", s
 
 drama = Category.create!(name: "Drama")
 Video.create!(title: "Monk", description: "Description of the Monk", small_cover_url: "/tmp/monk.jpg", large_cover_url: "/tmp/monk_large.jpg", category: drama)
+
+action = Category.create!(name: "Action")
