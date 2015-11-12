@@ -9,6 +9,8 @@ gem 'sass-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'pg'
+gem 'bootstrap_form'
+gem 'bcrypt'
 
 group :development do
   gem 'thin'
@@ -30,4 +32,3 @@ end
 group :production do
   gem 'rails_12factor'
 end
-
