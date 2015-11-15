@@ -21,3 +21,8 @@ drama = Category.create!(name: "Drama")
 Video.create!(title: "Monk", description: "Description of the Monk", small_cover_url: "/tmp/monk.jpg", large_cover_url: "/tmp/monk_large.jpg", category: drama)
 
 action = Category.create!(name: "Action")
+
+user = User.create!(email: 'test@test.info', full_name: "Seed User", password: "test")
+video = Video.first
+video.reviews.create(rating: 5, description: Faker::Lorem.paragraph(2), user: user)
+

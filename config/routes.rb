@@ -10,7 +10,7 @@ Myflix::Application.routes.draw do
   get 'sign_in', to: 'sessions#new'
   get 'home', to: 'videos#index'
   get 'sign_out', to: 'sessions#destroy'
-  resources :users, only: [:create]
+  resources :users, only: [:create, :show]
   resources :categories, only: [:show]
   resources :sessions, only: [:create]
 end
