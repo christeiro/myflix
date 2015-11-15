@@ -1,3 +1,3 @@
-Fabricator(:cartoons) do
-  name "Cartoons"
+Fabricator(:category) do
+  name { Faker::Lorem.word }
 end
