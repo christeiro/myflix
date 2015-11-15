@@ -8,4 +8,16 @@ class Video < ActiveRecord::Base
     return [] if search_term.blank?
     where('lower(title) LIKE ?', "%#{search_term.downcase}%").order("created_at DESC")
   end
+
+  def average_rating
+    average_rating = 0
+    if self.reviews.any?
+      self.reviews.each do |r|
+        average_rating += r.rating
+      end
+      average_rating = (average_rating / self.reviews.size).to_f.round(2)
+    else
+      average_rating = 0
+    end
+  end
 end
