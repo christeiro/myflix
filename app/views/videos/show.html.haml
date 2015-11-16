@@ -37,7 +37,7 @@
       %header
         %h3 User Reviews #{@reviews.count}
       %ul
-        - @reviews.each do |review|
+        - @video.reviews.each do |review|
           %article.review
             %li.row
               .col-sm-2

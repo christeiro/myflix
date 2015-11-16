@@ -15,7 +15,7 @@ describe VideosController do
       review1 = Fabricate(:review, video: video)
       review2 = Fabricate(:review, video: video)
       get :show, id: video.id
-      expect(assigns(:reviews)).to include(review1, review2)
+      expect(video.reviews).to include(review1, review2)
     end
 
     it "redirects to the sign in page for unauthenticated users" do 
