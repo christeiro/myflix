@@ -4,6 +4,7 @@ Myflix::Application.routes.draw do
     collection do
       get 'search', to: 'videos#search'
     end
+    resource :reviews, only: [:create]
   end
   get 'ui(/:action)', controller: 'ui'
   get 'register', to: 'users#new'
