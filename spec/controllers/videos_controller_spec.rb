@@ -18,13 +18,6 @@ describe VideosController do
       expect(video.reviews).to include(review1, review2)
     end
 
-    it "sets the @review for authenticated user" do
-      session[:user_id] = Fabricate(:user).id
-      video = Fabricate(:video)
-      get :show, id: video.id
-      expect(assigns(:review)).to be_instance_of(Review)
-    end
-
     it "redirects to the sign in page for unauthenticated users" do 
       video = Fabricate(:video)
       get :show, id: video.id

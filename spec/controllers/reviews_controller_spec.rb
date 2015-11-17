@@ -1,58 +1,57 @@
-require 'spec_helper'
+ require 'spec_helper'
 
 describe ReviewsController do
   describe "POST #create" do
-    context "with valid input" do
-      it "sets the @review variable for authenticated user" do
-        session[:user_id] = Fabricate(:user).id
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review), user: user
-        expect(video.reviews.count).to eq(1)
+    let(:video) { Fabricate(:video) }
+    context "with authenticated user" do
+      let(:current_user) { Fabricate(:user) }
+      before do
+        session[:user_id] = current_user.id
       end
-      it "shows the success message for authenticated user" do
-        session[:user_id] = Fabricate(:user).id
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review), user: user
-        expect(flash[:notice]).not_to be_blank
+      context "with valid input" do
+        before do
+          post :create, video_id: video.id, review: Fabricate.attributes_for(:review, video_id: video.id)
+        end
+        it "redirects to the video show page" do
+          expect(response).to redirect_to video
+        end
+        it "creates a review" do
+          expect(Review.count).to eq(1)
+        end
+        it "creates a review associated with the video" do
+          expect(Review.first.video).to eq(video)
+        end
+        it "creates a review associated with the signed in user" do
+          expect(Review.first.user).to eq(current_user)
+        end
       end
-      it "redirects to the video page for authenticated user" do
-        session[:user_id] = Fabricate(:user).id
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review), user: user
-        expect(response).to redirect_to video_path(video)
-      end
-      it "redirects to the sign in page for unauthenticated user" do
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review)
-        expect(response).to redirect_to root_path
+
+      context "with invalid input" do
+        it "does not create a review" do
+          post :create, video_id: video.id, review: {rating: 4}, video_id: video.id
+          expect(Review.count).to eq(0)
+        end
+        it "renders the videos/show template" do
+          post :create, video_id: video.id, review: {rating: 4}, video_id: video.id
+          expect(response).to render_template "videos/show"
+        end
+        it "sets the @video variable" do
+          post :create, video_id: video.id, review: {rating: 4}, video_id: video.id
+          expect(assigns(:video)).to eq(video)
+        end
+        it "sets the @reviews variable" do
+          review = Fabricate(:review, video: video)
+          post :create, video_id: video.id, review: {rating: 4}, video_id: video.id
+          expect(assigns(:reviews)).to match_array([review])
+        end
       end
     end
 
-    context "with invalid input" do
-      it "does not create the review for authenticated user" do
-        session[:user_id] = Fabricate(:user).id
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review, description: ''), user: user
-        expect(video.reviews.count).to eq(0)
-      end
-      it "redirects back to the video page for authenicated user" do
-        session[:user_id] = Fabricate(:user).id
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review, description: ''), user: user
-        expect(response).to redirect_to video_path(video)
-      end
-      it "redirects to the sign in page for unauthenticated user" do
-        video = Fabricate(:video);
-        user = Fabricate(:user);
-        post :create, video_id: video.id, review: Fabricate.attributes_for(:review, description: '')
+    context "with unauthenticated users" do
+      it "redirects to the root path" do
+        post :create, video_id: video.id, review: Fabricate.attributes_for(:review, video_id: video.id)
         expect(response).to redirect_to root_path
       end
-    end
+    end  
   end
 end
