@@ -14,7 +14,7 @@ describe QueueItemsController do
         video = Fabricate(:video)
         queue_item = Fabricate(:queue_item, video: video, user: user)
         get :index
-        expect(assigns(:queue_items)).to eq(queue_item)
+        expect(assigns(:queue_items)).to eq([queue_item])
       end
     end
     context "with unauthenticated user" do

@@ -22,7 +22,8 @@ Video.create!(title: "Monk", description: "Description of the Monk", small_cover
 
 action = Category.create!(name: "Action")
 
-user = User.create!(email: 'test@test.info', full_name: "Seed User", password: "test")
+user = User.create!(email: 'test@test.info', full_name: "Krister Smith", password: "test")
 video = Video.first
 video.reviews.create(rating: 5, description: Faker::Lorem.paragraph(2), user: user)
+queue_item = QueueItem.create!(user: user, video: video)
 
