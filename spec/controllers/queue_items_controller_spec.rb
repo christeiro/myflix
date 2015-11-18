@@ -8,13 +8,13 @@ describe QueueItemsController do
         get :index
         expect(response).to render_template :index
       end
-      it "sets the @queue_item variable" do
+      it "sets the @queue_items variable" do
         user = Fabricate(:user)
         session[:user_id] = user.id
         video = Fabricate(:video)
         queue_item = Fabricate(:queue_item, video: video, user: user)
         get :index
-        expect(assigns(:queue_item)).to eq(queue_item)
+        expect(assigns(:queue_items)).to eq(queue_item)
       end
     end
     context "with unauthenticated user" do
