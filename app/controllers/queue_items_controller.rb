@@ -19,12 +19,13 @@ class QueueItemsController < ApplicationController
   end
 
   def update_queue
-    begin
-      update_queue_items
-      normalize_queue_item_positions
-    rescue ActiveRecord::RecordInvalid
-      flash[:error] = "Invalid position numbers." 
-    end
+    flash[:error] = "Invalid position numbers." if !QueueItem.update_my_queue(params[:queue_items], current_user)
+    # begin
+    #   update_queue_items
+    #   normalize_queue_item_positions
+    # rescue ActiveRecord::RecordInvalid
+    #   flash[:error] = "Invalid position numbers." 
+    # end
     redirect_to my_queue_path
   end
 
