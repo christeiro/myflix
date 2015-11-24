@@ -46,6 +46,15 @@ class QueueItemsController < ApplicationController
       params[:queue_items].each do |queue_items_data|
         queue_item = QueueItem.find(queue_items_data["id"])
         queue_item.update_attributes!(position: queue_items_data["position"]) if queue_item.user == current_user
+        if queue_items_data["rating"]
+          review = current_user.reviews.find_by(video_id: queue_item.video_id)
+          if review
+            review.update_attributes(rating: queue_items_data["rating"])
+          else 
+            review = Review.new(user: current_user, video_id: queue_item.video_id, rating: queue_items_data["rating"])
+            review.save(validate: false)
+          end
+        end
       end
     end
   end

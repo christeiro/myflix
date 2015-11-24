@@ -1,4 +1,4 @@
-   require 'spec_helper'
+require 'spec_helper'
 
 describe QueueItemsController do
   describe "GET index" do
@@ -146,6 +146,34 @@ describe QueueItemsController do
         queue_item2 = Fabricate(:queue_item, user: alice, position: 2)
         post :update_queue, queue_items: [{id: queue_item1.id, position: 3}, {id: queue_item2.id, position: 4}]
         expect(alice.queue_items.map(&:position)).to eq([1,2])
+      end
+      it "changes rating for a video that user has already reviewd" do
+        alice = Fabricate(:user)
+        session[:user_id] = alice.id
+        southpark = Fabricate(:video)
+        futurama = Fabricate(:video)
+        southpark_review = Fabricate(:review, video: southpark, rating: 5, user: alice)
+        futurama_review = Fabricate(:review, video: futurama, rating: 5, user: alice)
+        queue_item1 = Fabricate(:queue_item, user: alice, position: 1, video: southpark)
+        queue_item2 = Fabricate(:queue_item, user: alice, position: 2, video: futurama)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3, rating: 1, video: southpark}, {id: queue_item2.id, position: 4, rating: 5, video: futurama}]
+        expect(southpark_review.reload.rating).to eq(1)
+      end
+      it "adds a new rating to the video that user has not rated before" do
+        alice = Fabricate(:user)
+        session[:user_id] = alice.id
+        southpark = Fabricate(:video)
+        queue_item1 = Fabricate(:queue_item, user: alice, position: 1, video: southpark)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3, rating: 1, video: southpark}]
+        expect(Review.count).to eq(1)
+      end
+      it "does not add a rating to the video if user has not selected it" do
+        alice = Fabricate(:user)
+        session[:user_id] = alice.id
+        southpark = Fabricate(:video)
+        queue_item1 = Fabricate(:queue_item, user: alice, position: 1, video: southpark)
+        post :update_queue, queue_items: [{id: queue_item1.id, position: 3, video: southpark}]
+        expect(Review.count).to eq(0)
       end
     end
     context "with invalid input" do
